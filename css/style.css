@@ -21,8 +21,8 @@ html, body {
 	margin: 0 auto;
 	width: 600px;
 	text-align: center;
-	margin-bottom: 50px;
-	margin-top: 50px;
+	margin-bottom: 30px;
+	margin-top: 30px;
 }
 
 #floating-panel {
@@ -37,3 +37,26 @@ html, body {
 	line-height: 30px;
 	padding-left: 10px;
   }
+
+  #Details{
+  	margin: 0 auto;
+  	margin-top: 20px;
+  	width: 90%;
+  	height: 100px;
+  	border: 1px solid black;
+  }
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+

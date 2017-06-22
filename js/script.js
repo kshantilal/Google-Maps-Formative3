@@ -163,18 +163,18 @@ function init(){
 	HomeMarker();
 	// marker.addListener("click", toggleBounce);
 
-	
-
 
 	document.getElementById('mode').addEventListener('change', function() {
 		if (savedLocation) {
 			showRoute(currentMarker);
+		} else{
+			alert("Please select a marker");
+			savedLocation = false;
 		}
 	  
 
 	});
 
-//wrap showRoute in a if statement as a boolean. if current marker = true then do something
 };
 
 google.maps.event.addDomListener(window, 'load', init);
@@ -267,10 +267,26 @@ function showRoute(endlocation) {
 			directionsDisplay.setDirections(response);
 			console.log(response);
 			console.log(response.routes[0].legs[0].distance.text);
+			DistanceDisplay(response.routes[0].legs[0].distance.text, response.routes[0].legs[0].duration.text, response.routes[0].legs[0].end_address);
+			
 			} else {
 			window.alert('Directions request failed due to ' + status);
 			}
 		});
+}
+
+function DistanceDisplay(distance,duration,end_address){
+	var Details = $("#Details").val();
+	$("#routeDistance").empty();
+	$("#routeDuration").empty();
+	$("#routeAddress").empty();
+
+	$("#routeDistance").append("<div><h5>"+distance+"</h5></div>");
+	$("#routeDuration").append("<div><h5>"+duration+"</h5></div>");
+	$("#routeAddress").append("<div><h5>"+end_address+"</h5></div>");
+						
+
+
 }
 
 
