@@ -2,7 +2,8 @@ $(document).ready(function(){
 
 var	map, marker, infoBox; //infobox
 var markers = [];
-
+var currentMarker;
+//make a boolean
 var	AllMarkers = [
 	{
 		lat: -41.291659,
@@ -155,28 +156,23 @@ function init(){
 		]
 
 	}
-	var directionsDisplay = new google.maps.DirectionsRenderer;
-	var directionsService = new google.maps.DirectionsService;
 
-	// directionDisplay.setMap(map);
 
 	map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	addAllMarkers();
 	HomeMarker();
 	// marker.addListener("click", toggleBounce);
-	// showDirection(directionService, directionDisplay);
-	// document.getElementById('mode').addListener('change', function(){
-	// 	showDirection(directionService, directionDisplay);
-	// });
 
-	directionsDisplay.setMap(map);
+	
 
-	showRoute(directionsService, directionsDisplay);
+
 	document.getElementById('mode').addEventListener('change', function() {
-	  showRoute(directionsService, directionsDisplay);
+
+	  showRoute(currentMarker);
+
 	});
 
-
+//wrap showRoute in a if statement as a boolean. if current marker = true then do something
 };
 
 google.maps.event.addDomListener(window, 'load', init);
@@ -229,7 +225,6 @@ function HomeMarker(){
 
 
 function AllInfoBox(marker){
-
 	infoBox = new google.maps.InfoWindow();
 	google.maps.event.addListener(marker, "click", function(){
 		infoBox.setContent("<div><strong>"+marker.title+"</strong></div><hr>"+
@@ -237,23 +232,31 @@ function AllInfoBox(marker){
 
 			);
 		infoBox.open(map, marker); //this opens the info box
+		currentMarker = marker;
+
+		showRoute(marker);
 
 	});
 
 };
 
+var directionsDisplay;
+function showRoute(endlocation) {
+	if (directionsDisplay) {
+		directionsDisplay.setMap(null);
+ 	}
 
-function showRoute(directionsService, directionsDisplay) {
+	directionsDisplay = new google.maps.DirectionsRenderer;
+	var directionsService = new google.maps.DirectionsService;
+
+	directionsDisplay.setMap(map);
 	var selectedMode = document.getElementById('mode').value;
 	directionsService.route({
 		origin: {
 			lat: -41.324098,
 			lng: 174.795680, 
 		},			
-		destination: {
-			lat: -41.316821,
-			lng: 174.804529,
-		},  
+		destination: endlocation.position,  
 		travelMode: google.maps.TravelMode[selectedMode]
 
 	}, function(response, status) {
@@ -266,6 +269,8 @@ function showRoute(directionsService, directionsDisplay) {
 			}
 		});
 }
+
+
 
 
 
