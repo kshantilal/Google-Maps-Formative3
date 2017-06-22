@@ -161,14 +161,14 @@ function init(){
 	map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	addAllMarkers();
 	HomeMarker();
-	// marker.addListener("click", toggleBounce);
+	marker.addListener("click", toggleBounce);
 
 
 	document.getElementById('mode').addEventListener('change', function() {
 		if (savedLocation) {
 			showRoute(currentMarker);
 		} else{
-			alert("Please select a marker");
+			alert("Please select a fishing spot on the map");
 			savedLocation = false;
 		}
 	  
@@ -196,6 +196,7 @@ function addAllMarkers(){
 		markers.push(marker);
 
 
+
 	};
 
 };
@@ -214,15 +215,15 @@ function HomeMarker(){
 };
 
 
-// function toggleBounce(){
-// 	if(marker.getAnimation() === null){
-// 		marker.setAnimation(google.maps.Animation.BOUNCE);
+function toggleBounce(){
+	if(marker.getAnimation() === null){
+		marker.setAnimation(google.maps.Animation.BOUNCE);
 
-// 	} else {
-// 		marker.setAnimation(null);
-// 	}
+	} else {
+		marker.setAnimation(null);
+	}
 
-// };
+};
 
 
 
@@ -235,7 +236,7 @@ function AllInfoBox(marker){
 			);
 		infoBox.open(map, marker); //this opens the info box
 		currentMarker = marker;
-
+		// toggleBounce();
 		showRoute(marker);
 		savedLocation = true;
 
@@ -265,8 +266,8 @@ function showRoute(endlocation) {
 	}, function(response, status) {
 		if (status == 'OK') {
 			directionsDisplay.setDirections(response);
-			console.log(response);
-			console.log(response.routes[0].legs[0].distance.text);
+			// console.log(response);
+			// console.log(response.routes[0].legs[0].distance.text);
 			DistanceDisplay(response.routes[0].legs[0].distance.text, response.routes[0].legs[0].duration.text, response.routes[0].legs[0].end_address);
 			
 			} else {
@@ -277,20 +278,14 @@ function showRoute(endlocation) {
 
 function DistanceDisplay(distance,duration,end_address){
 	var Details = $("#Details").val();
-	$("#routeDistance").empty();
-	$("#routeDuration").empty();
-	$("#routeAddress").empty();
 
-	$("#routeDistance").append("<div><h5>"+distance+"</h5></div>");
-	$("#routeDuration").append("<div><h5>"+duration+"</h5></div>");
-	$("#routeAddress").append("<div><h5>"+end_address+"</h5></div>");
-						
+	$("#routeDistance").empty().prepend("<div><h5>"+distance+"</h5></div>");
+	$("#routeDuration").empty().prepend("<div><h5>"+duration+"</h5></div>");
+	$("#routeAddress").empty().prepend("<div><h5>"+end_address+"</h5></div>");
+
 
 
 }
-
-
-//make a function with the different routes in the console. eg response.routes[0].legs[0].end_address,
 
 
 
