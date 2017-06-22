@@ -3,7 +3,7 @@ $(document).ready(function(){
 var	map, marker, infoBox; //infobox
 var markers = [];
 var currentMarker;
-//make a boolean
+var savedLocation = false;
 var	AllMarkers = [
 	{
 		lat: -41.291659,
@@ -167,8 +167,10 @@ function init(){
 
 
 	document.getElementById('mode').addEventListener('change', function() {
-
-	  showRoute(currentMarker);
+		if (savedLocation) {
+			showRoute(currentMarker);
+		}
+	  
 
 	});
 
@@ -235,6 +237,7 @@ function AllInfoBox(marker){
 		currentMarker = marker;
 
 		showRoute(marker);
+		savedLocation = true;
 
 	});
 
@@ -271,12 +274,7 @@ function showRoute(endlocation) {
 }
 
 
-
-
-
-
-
-
+//make a function with the different routes in the console. eg response.routes[0].legs[0].end_address,
 
 
 
