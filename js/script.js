@@ -75,10 +75,10 @@ function init(){
 	var mapOptions = {
 		//Set where the map starts
 		center: {
-			lat: -41.324098,
-			lng: 174.795680,
+			lat: -41.299688,
+			lng: 174.811406,
 		},
-		zoom: 14,
+		zoom: 13,
 		disableDefaultUI: false,
 		disableDoubleClickZoom: false,
 		streetViewControl: true,
@@ -155,14 +155,12 @@ function init(){
 
 		]
 
-	}
+	};
 
 
 	map = new google.maps.Map(document.getElementById('map'), mapOptions);
 	addAllMarkers();
-	HomeMarker();
-	marker.addListener("click", toggleBounce);
-
+	FindUser();
 
 	document.getElementById('mode').addEventListener('change', function() {
 		if (savedLocation) {
@@ -201,29 +199,6 @@ function addAllMarkers(){
 
 };
 
-function HomeMarker(){
-	marker = new google.maps.Marker({
-		position: {
-			lat: -41.324098,
-			lng: 174.795680,
-		},
-		map: map,
-		animation: google.maps.Animation.DROP,
-		icon: "img/homeMarker.png",
-		
-	})	
-};
-
-
-function toggleBounce(){
-	if(marker.getAnimation() === null){
-		marker.setAnimation(google.maps.Animation.BOUNCE);
-
-	} else {
-		marker.setAnimation(null);
-	}
-
-};
 
 
 
@@ -236,7 +211,6 @@ function AllInfoBox(marker){
 			);
 		infoBox.open(map, marker); //this opens the info box
 		currentMarker = marker;
-		// toggleBounce();
 		showRoute(marker);
 		savedLocation = true;
 
@@ -249,19 +223,18 @@ function showRoute(endlocation) {
 	if (directionsDisplay) {
 		directionsDisplay.setMap(null);
  	}
-
+	
 	directionsDisplay = new google.maps.DirectionsRenderer;
 	var directionsService = new google.maps.DirectionsService;
-
+	directionsDisplay = new google.maps.DirectionsRenderer({suppressMarkers: true});
 	directionsDisplay.setMap(map);
 	var selectedMode = document.getElementById('mode').value;
 	directionsService.route({
-		origin: {
-			lat: -41.324098,
-			lng: 174.795680, 
-		},			
+
+		origin: userLocation.position,			
 		destination: endlocation.position,  
-		travelMode: google.maps.TravelMode[selectedMode]
+		travelMode: google.maps.TravelMode[selectedMode],
+
 
 	}, function(response, status) {
 		if (status == 'OK') {
@@ -274,18 +247,37 @@ function showRoute(endlocation) {
 			window.alert('Directions request failed due to ' + status);
 			}
 		});
-}
+};
 
 function DistanceDisplay(distance,duration,end_address){
 	var Details = $("#Details").val();
+	$("#routeDistance").empty().prepend("<div><h4>"+distance+"</h4></div>");
+	$("#routeDuration").empty().prepend("<div><h4>"+duration+"</h4></div>");
+	$("#routeAddress").empty().prepend("<div><h4>"+end_address+"</h4></div>");
 
-	$("#routeDistance").empty().prepend("<div><h5>"+distance+"</h5></div>");
-	$("#routeDuration").empty().prepend("<div><h5>"+duration+"</h5></div>");
-	$("#routeAddress").empty().prepend("<div><h5>"+end_address+"</h5></div>");
+};
+
+function FindUser(){
+	if (navigator.geolocation) {
+		navigator.geolocation.getCurrentPosition(function(position){
+			userLocation = new google.maps.Marker({
+				position: {
+					lat: position.coords.latitude,
+					lng: position.coords.longitude,
+				},
+				map: map,
+				icon: "img/homeMarker.png",
+				animation: google.maps.Animation.BOUNCE,
+				zoom: 14,
+			});
+			map.panTo(userLocation.position);
 
 
+		});
 
-}
+
+	}
+};
 
 
 
